@@ -17,12 +17,20 @@ class StackFactory<E> {
     * @param entry
     * @return
     */
-	public Stack<E> getStack(String entry) {
+	public Stack<E> getStack(String entry,String listaEntry) {
 	   // seleccion de la implementacion a utilizar:
 		if (entry.equals("arraylist"))		      
 			return new StackArrayList<E>(); //regresa list
-		if (entry.equals("list"))
-			return new StackList<E>(); //regresa ArrayList
+		
+		if (entry.equals("list")){
+			if(listaEntry.equals("simple"))
+				return new SingleList<E>(); //regresa ArrayList
+			if(listaEntry.equals("doble"))
+				return new DobleList<E>(); //regresa ArrayList
+			if(listaEntry.equals("circular"))
+				return new CircularList<E>(); //regresa ArrayList
+			
+		}
 		if (entry.equals("vector"))
 	      return new StackVector<E>(); //regresa Vector
 		
