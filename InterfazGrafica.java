@@ -14,22 +14,25 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DecimalFormat;
+
 
 public class InterfazGrafica extends JPanel implements ActionListener, ItemListener{
 	/**ATRIBUTOS**/
-	private static JFrame frame,frameControl;										//frame principal de la GUI y frame de control de errores
+	private static JFrame frame;										//frame principal de la GUI y frame de control de errores
 	private JTextArea areatexto; 
-    private JComboBox comboBox;
+    private JComboBox<String> comboBox;
 	private JButton btonSimplEncadenado,btonDoblEncadenado, btonCircular;
-	private static String comSimple,comDoble,comCircular;
+	private static String comSimple="comsimple",comDoble="comdoble",comCircular="comcircular";
+	private Calculadora calculadora;
 	
 	/**
 	* Constructor con un parametro que es un frame de control de errores
 	* @param v El parámetro v es un frame que sirve para mostrarle errores de ingreso al usuario
 	*/
 	public InterfazGrafica(JFrame v){
-		frameControl=v;																	//Panel de control de errores
+		/*CREANDO MI UNICA CALCULADORA*/
+		calculadora=calculadora.getSingleton();
+		
 		
 		//Construyendo paneles de la interfaz				
 		JComponent panelBanner=panelBanner();											
@@ -41,8 +44,11 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 		add(panelImplementacion);
 		add(panelImplementacionList);
 		add(panelResultado);
-
 		
+		btonSimplEncadenado.setVisible(false);
+		btonDoblEncadenado.setVisible(false);
+		btonCircular.setVisible(false);
+
 	}	
 	
 	/**
@@ -54,7 +60,7 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 		panel.setBorder(BorderFactory.createTitledBorder(" Implementacion. ")); 		
 		panel.setPreferredSize(new Dimension(125, 55));     							//Cambiandolo de tamanio
 
-		comboBox= new JComboBox();
+		comboBox= new JComboBox<String>();
 		comboBox.addItem("Escoga una opcion");
 		comboBox.addItem("Vector");
 		comboBox.addItem("ArrayList");
@@ -81,6 +87,7 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 		btonSimplEncadenado=new JButton("Simplemente encadenados");
 		btonSimplEncadenado.setActionCommand(comSimple);											//Comando de boton
 		btonSimplEncadenado.addActionListener(this);												//Asignando listener
+		
 		btonDoblEncadenado=new JButton("Doble encadenados");
 		btonDoblEncadenado.setActionCommand(comDoble);											//Comando de boton
 		btonDoblEncadenado.addActionListener(this);												//Asignando listener
@@ -141,10 +148,26 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 	* @see ActionListener
 	*/						  
 	public void actionPerformed(ActionEvent e){									//Empieza el control de eventos
-	String comando = e.getActionCommand();										//String del comando de accion			
+		String comando = e.getActionCommand();										//String del comando de accion			
+		
+		if(comando.equals(comSimple)){
+			/*Muestra el Resultado con la implementacion de list*/
+			calculadora.crearStack("list","simple");
+	    	areatexto.setText(calculadora.muestraResultado());
+		}
 	
-	
-	
+		if(comando.equals(comDoble)){
+			/*Muestra el Resultado con la implementacion de list*/
+			calculadora.crearStack("list","doble");
+	    	areatexto.setText(calculadora.muestraResultado());
+		}
+		
+		if(comando.equals(comCircular)){
+			/*Muestra el Resultado con la implementacion de list*/
+			calculadora.crearStack("list","circular");
+	    	
+			areatexto.setText(calculadora.muestraResultado());
+		}
 	}//Final de gestionador de eventos	
 
 	/**
@@ -158,16 +181,14 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 		frame.setContentPane(this);												//Estableciendo el panel principal.
 		frame.setResizable(false);												//Bloqueando la maximizaciÃ³n de la ventana
 		
-		
-		
 		frame.setDefaultCloseOperation (WindowConstants.DO_NOTHING_ON_CLOSE);	//Asegurandose de que el evento foco se valla al Panel principal
 		frame.addWindowListener(new WindowAdapter() {							//El evento foco se centra en este panel no importa que
 		//Cerrando con confirmacion
 		public void windowClosing(WindowEvent we){
 			int eleccion = JOptionPane.showConfirmDialog(null, "¿Desea salir?");
-			if ( eleccion == 0) {
-				System.exit(0);
-			}  
+				if ( eleccion == 0) {
+					System.exit(0);
+				}  
 			}
 		});
 		
@@ -198,8 +219,8 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 			btonDoblEncadenado.setVisible(false);
 			btonCircular.setVisible(false);
 			/*Muestra el Resultado con la implementacion de arrayList*/
-			Calculadora calarraylist= new Calculadora("vector");
-	    	areatexto.setText(calarraylist.muestraResultado());
+			calculadora.crearStack("vector","");
+	    	areatexto.setText(calculadora.muestraResultado());
 
 		}
 		
@@ -208,8 +229,8 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 			btonDoblEncadenado.setVisible(false);
 			btonCircular.setVisible(false);
 			/*Muestra el Resultado con la implementacion de vector*/
-			Calculadora calvector= new Calculadora("arraylist");
-	    	areatexto.setText(calvector.muestraResultado());
+			calculadora.crearStack("arraylist","");
+	    	areatexto.setText(calculadora.muestraResultado());
 
 	    }
 					
@@ -217,14 +238,8 @@ public class InterfazGrafica extends JPanel implements ActionListener, ItemListe
 			btonSimplEncadenado.setVisible(true);
 			btonDoblEncadenado.setVisible(true);
 			btonCircular.setVisible(true);
-			/*Muestra el Resultado con la implementacion de list*/
-			Calculadora calarraylist= new Calculadora("vector");
-	    	areatexto.setText(calarraylist.muestraResultado());
-		}
-								
-			
-		
-    	
-		
+		} 	
 	}
 }
+
+
