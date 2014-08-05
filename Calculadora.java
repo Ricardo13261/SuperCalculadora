@@ -19,24 +19,46 @@ public class Calculadora {
 	private String car;
 	private int operando1,operando2,resultado;
 	private char aChar;						//Se guarda el caracter que se va a ir leyendo
-	private String implementacion;
+	private String implementacion,lista;
 	
 	/**
 	 * Constuctor de la clase
 	 */
-	public Calculadora(String implementa) {
-		implementacion=implementa;
-		StackFactory<Integer> sFactory= new StackFactory<Integer>();
-		data =  sFactory.getStack(implementa);
+	public Calculadora(String implementa, String list) {
 		car="";
 		operando1=0;
 		operando2=0;
 		resultado=0;
 	}
 
-	public void eligeImplementacion(){
+	/*
+     *  Creacion del stack segun la implementacion deseada
+     */
+    public void crearStack(String implementa,String list){
+		implementacion=implementa;
+		lista=list;
+    	StackFactory<Integer> sFactory = new StackFactory<Integer>();
+        data= sFactory.getStack(implementa,list);
+    }
+	
+	
+	/*
+	 * AQUI SE HACE EL SINGLETON
+	 */
+	/**
+	 * Metodo que sirve para controlar la creacion de una calculadora
+	 * Esta sin parametros de primero se crea sin parametros
+	 */
+	public Calculadora(){
 		
-		
+	}
+	
+	/*Creamis un objeto de la clase calculadora*/
+	private static Calculadora miCalcu = new Calculadora();
+	
+	/**/
+	public static Calculadora getSingleton(){
+		return miCalcu;
 	}
 
 	/**
@@ -106,7 +128,18 @@ public class Calculadora {
 	          }
 	           
 	      }
-	      return "El resultado de la implementacion usando "+implementacion+ " es:" +"\n" +data.peek();
+	      
+	      /*Se especifica que implementacion se uso*/
+	      if(lista.equals("simple"))
+	    	  return "El resultado de la implementacion usando "+lista+ " es:" +"\n" +data.peek();
+	      if(lista.equals("doble"))
+	    	  return "El resultado de la implementacion usando "+lista+ " es:" +"\n" +data.peek();
+	      if(lista.equals("circular"))
+	    	  return "El resultado de la implementacion usando "+lista+ " es:" +"\n" +data.peek();
+	      else
+	    	  return "El resultado de la implementacion usando "+implementacion+ " es:" +"\n" +data.peek();
+	      
 
 	}
 }
+	
